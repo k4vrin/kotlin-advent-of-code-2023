@@ -7,20 +7,20 @@ import kotlin.test.assertEquals
 
 class Day03Test {
     
-    private lateinit var acctualInput: List<String>
+    private lateinit var actualInput: List<String>
     private lateinit var testInput1: List<String>
     private lateinit var testInput2: List<String>
     
     @BeforeTest
     fun setup() {
-        acctualInput = readInputPath("src/day03/day03.txt")
+        actualInput = readInputPath("src/day03/day03.txt")
         testInput1 = readInputPath("src/day03/day03_test_1.txt")
         testInput2 = readInputPath("src/day03/day03_test_2.txt")
     }
     
     @Test
-    fun `part 1, acctual data, should be 536576`() {
-        assertEquals(536576, day03.part1(acctualInput))
+    fun `part 1, actual data, should be 536576`() {
+        assertEquals(536576, day03.part1(actualInput))
     }
     
     @Test
@@ -34,8 +34,8 @@ class Day03Test {
     }
     
     @Test
-    fun `part 2, acctual data, should be 75741499`() {
-        assertEquals(75741499, day03.part2(acctualInput))
+    fun `part 2, actual data, should be 75741499`() {
+        assertEquals(75741499, day03.part2(actualInput))
     }
     
     @Test

@@ -131,7 +131,7 @@ fun part2(input: List<String>): Long {
 
     println(locations.sortedBy { it.lower })
 
-    return 1
+    return locations.minBy { it.lower }.lower
 }
 
 

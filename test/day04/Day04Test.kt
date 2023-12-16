@@ -12,12 +12,12 @@ class Day04Test {
     
     @BeforeTest
     fun setup() {
-        acctualInput = readInputPath("src/day04/day05.txt")
-        testInput = readInputPath("src/day04/day05_test.txt")
+        acctualInput = readInputPath("src/day04/day04.txt")
+        testInput = readInputPath("src/day04/day04_test.txt")
     }
     
     @Test
-    fun `part 1, acctual data, should be 18519`() {
+    fun `part 1, actual data, should be 18519`() {
         assertEquals(18519, day04.part1(acctualInput))
     }
     
@@ -28,7 +28,7 @@ class Day04Test {
     
     
     @Test
-    fun `part 2, acctual data, should be 11787590`() {
+    fun `part 2, actual data, should be 11787590`() {
         assertEquals(11787590, day04.part2(acctualInput))
     }
     
