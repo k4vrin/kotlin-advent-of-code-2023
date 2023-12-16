@@ -4,8 +4,8 @@ import println
 import readInputPath
 
 fun main() {
-    val testInput = readInputPath("src/day04/day04_test.txt")
-    val input = readInputPath("src/day04/day04.txt")
+    val testInput = readInputPath("src/day04/day05_test.txt")
+    val input = readInputPath("src/day04/day05.txt")
     
     part1(input).println()
     part2(input).println()

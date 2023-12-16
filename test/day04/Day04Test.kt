@@ -12,8 +12,8 @@ class Day04Test {
     
     @BeforeTest
     fun setup() {
-        acctualInput = readInputPath("src/day04/day04.txt")
-        testInput = readInputPath("src/day04/day04_test.txt")
+        acctualInput = readInputPath("src/day04/day05.txt")
+        testInput = readInputPath("src/day04/day05_test.txt")
     }
     
     @Test
