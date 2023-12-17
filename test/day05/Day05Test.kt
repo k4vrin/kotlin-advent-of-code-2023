@@ -29,7 +29,7 @@ class Day05Test {
 
     @Test
     fun `part 2, actual data, should be 37806486`() {
-        assertEquals(37806486, day05.part2(actualInput))
+        assertEquals(37806486, day05.part2Cleaner(actualInput))
     }
 
     @Test

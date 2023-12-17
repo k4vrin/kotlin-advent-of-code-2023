@@ -66,14 +66,28 @@ fun part2(input: List<String>): Long {
             val isNotAdd = seedMap.sources.all { it.lower > mapRange.upper || it.upper < mapRange.lower }
 
             if (wholeAdd == null && !isNotAdd) {
-                val lowerPartial = seedMap.sources.firstOrNull { it.lower <= mapRange.lower && it.upper > mapRange.lower }
+                val lowerPartial =
+                    seedMap.sources.firstOrNull { it.lower <= mapRange.lower && it.upper > mapRange.lower }
                 lowerPartial?.let {
                     println("lowerPartial: $it")
-                    val upperPartial = seedMap.sources.firstOrNull { it.upper >= mapRange.upper && it.lower < mapRange.upper  }
-                    list.add(MapRange(lower = mapRange.lower, upper = if (upperPartial != null) lowerPartial.upper - 1 else lowerPartial.upper, addition = 0))
+                    val upperPartial =
+                        seedMap.sources.firstOrNull { it.upper >= mapRange.upper && it.lower < mapRange.upper }
+                    list.add(
+                        MapRange(
+                            lower = mapRange.lower,
+                            upper = if (upperPartial != null) lowerPartial.upper - 1 else lowerPartial.upper,
+                            addition = 0
+                        )
+                    )
                     upperPartial?.let {
                         println("upperPartial: $it")
-                        list.add(MapRange(lower = upperPartial.lower.coerceAtLeast(lowerPartial.upper) , upper = mapRange.upper, addition = 0))
+                        list.add(
+                            MapRange(
+                                lower = upperPartial.lower.coerceAtLeast(lowerPartial.upper),
+                                upper = mapRange.upper,
+                                addition = 0
+                            )
+                        )
 
 //                        if (upperPartial.lower != lowerPartial.upper) {
 //                            list.add(MapRange(lower = lowerPartial.upper + 1, upper = upperPartial.lower - 1, addition = 0))
@@ -87,14 +101,28 @@ fun part2(input: List<String>): Long {
                 }
 
                 if (lowerPartial == null) {
-                    val upperPartial2 = seedMap.sources.firstOrNull { it.upper >= mapRange.upper && it.lower < mapRange.upper }
+                    val upperPartial2 =
+                        seedMap.sources.firstOrNull { it.upper >= mapRange.upper && it.lower < mapRange.upper }
                     upperPartial2?.let {
                         println("upperPartial2: $it")
-                        val lowerPartial2 = seedMap.sources.firstOrNull { it.lower <= mapRange.lower  && it.upper > mapRange.lower  }
-                        list.add(MapRange(lower = if (lowerPartial2 != null) upperPartial2.lower + 1 else upperPartial2.lower, upper = mapRange.upper, addition = 0))
+                        val lowerPartial2 =
+                            seedMap.sources.firstOrNull { it.lower <= mapRange.lower && it.upper > mapRange.lower }
+                        list.add(
+                            MapRange(
+                                lower = if (lowerPartial2 != null) upperPartial2.lower + 1 else upperPartial2.lower,
+                                upper = mapRange.upper,
+                                addition = 0
+                            )
+                        )
                         lowerPartial2?.let {
                             println("lowerPartial2: $it")
-                            list.add(MapRange(lower = mapRange.lower, upper = lowerPartial2.upper.coerceAtMost(upperPartial2.lower), addition = 0))
+                            list.add(
+                                MapRange(
+                                    lower = mapRange.lower,
+                                    upper = lowerPartial2.upper.coerceAtMost(upperPartial2.lower),
+                                    addition = 0
+                                )
+                            )
 //                            if (lowerPartial2.upper != upperPartial2.lower) {
 //                                list.add(MapRange(lower = lowerPartial2.upper + 1, upper = upperPartial2.lower - 1, addition = 0))
 //                            }
@@ -133,6 +161,124 @@ fun part2(input: List<String>): Long {
 
     return locations.minBy { it.lower }.lower
 }
+
+fun part2Cleaner(input: List<String>): Long {
+    val seeds = input.first().split("\\D+".toRegex())
+        .drop(1)
+        .chunked(2)
+        .map {
+            MapRange(
+                lower = it.first().toLong(),
+                upper = it.first().toLong() + it.last().toLong(),
+                addition = 0
+            )
+        }
+
+    val seedMaps = seedMaps(input)
+
+    val locations = seedMaps.fold(seeds) { acc, seedMap ->
+        acc.flatMap { mapRange ->
+
+            val isComplete = seedMap.sources
+                .any { it.lower <= mapRange.lower && it.upper >= mapRange.upper }
+            val isNotAddable = seedMap.sources
+                .all { it.lower > mapRange.upper || it.upper < mapRange.lower }
+            val isPartiallyAddable = !isComplete && !isNotAddable
+
+            buildList {
+                when {
+                    isPartiallyAddable -> {
+                        seedMap.sources
+                            .firstOrNull {
+                                it.lower <= mapRange.lower && it.upper > mapRange.lower
+                            }
+                            ?.let { lowerPart ->
+                                val upperPart =
+                                    seedMap.sources
+                                        .firstOrNull { it.upper >= mapRange.upper && it.lower < mapRange.upper }
+                                add(
+                                    MapRange(
+                                        lower = mapRange.lower,
+                                        upper = lowerPart.upper - (upperPart?.let { 1 } ?: 0),
+                                        addition = 0
+                                    )
+                                )
+
+                                upperPart?.let {
+                                    add(
+                                        MapRange(
+                                            lower = upperPart.lower.coerceAtLeast(lowerPart.upper),
+                                            upper = mapRange.upper,
+                                            addition = 0
+                                        )
+                                    )
+                                } ?: run {
+                                    add(
+                                        MapRange(
+                                            lower = lowerPart.upper + 1,
+                                            upper = mapRange.upper,
+                                            addition = 0
+                                        )
+                                    )
+                                }
+                            } ?: run {
+                            seedMap.sources
+                                .firstOrNull { it.upper >= mapRange.upper && it.lower < mapRange.upper }
+                                ?.let { upperPart ->
+                                    val lowerPart =
+                                        seedMap.sources.firstOrNull { it.lower <= mapRange.lower && it.upper > mapRange.lower }
+                                    add(
+                                        MapRange(
+                                            lower = upperPart.lower + (lowerPart?.let { 1 } ?: 0),
+                                            upper = mapRange.upper,
+                                            addition = 0
+                                        )
+                                    )
+
+                                    lowerPart?.let {
+                                        add(
+                                            MapRange(
+                                                lower = mapRange.lower,
+                                                upper = lowerPart.upper.coerceAtMost(upperPart.lower),
+                                                addition = 0
+                                            )
+                                        )
+                                    } ?: run {
+                                        add(
+                                            MapRange(
+                                                lower = mapRange.lower,
+                                                upper = upperPart.lower - 1,
+                                                addition = 0
+                                            )
+                                        )
+                                    }
+                                }
+                        }
+
+                    }
+                    // isComplete || isNotAddable
+                    else -> add(mapRange)
+                }
+            }
+        }
+            .map { seed ->
+                seedMap.sources
+                    .firstOrNull { it.lower <= seed.lower && it.upper >= seed.upper }
+                    ?.addition
+                    .orZero()
+                    .let { addition ->
+                        MapRange(
+                            lower = seed.lower + addition,
+                            upper = seed.upper + addition,
+                            addition = seed.addition
+                        )
+                    }
+            }
+    }
+
+    return locations.minBy { it.lower }.lower
+}
+
 
 
 data class SeedMap(
@@ -177,3 +323,5 @@ private fun seedMaps(input: List<String>) =
             sources = pairs.map { pair -> pair.second }
         )
     }
+
+fun Long?.orZero(): Long = this ?: 0
